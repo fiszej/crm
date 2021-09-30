@@ -1,0 +1,30 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Customers{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <h1>Edit customer pofile </h1>
+       {{ form_start(form) }}
+        
+            {{ form_row(form.name) }}
+
+            {{ form_row(form.email) }}
+
+            {{ form_row(form.phone) }}
+                
+            {{ form_row(form.address) }}
+                
+            {{ form_row(form.zipcode) }}
+
+            {{ form_row(form.city) }}
+
+            {{ form_row(form.discount) }}
+
+            {{ form_row(form.description) }}
+
+        {{ form_end (form) }}
+</div>
+
+{% endblock %}

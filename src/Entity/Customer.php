@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CustomerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -48,7 +50,7 @@ class Customer
     private $city;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255)
      */
     private $discount;
 
@@ -56,6 +58,16 @@ class Customer
      * @ORM\Column(type="string", length=255)
      */
     private $description;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="customerId")
+     */
+    private $tasks;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -134,12 +146,12 @@ class Customer
         return $this;
     }
 
-    public function getDiscount(): ?int
+    public function getDiscount(): ?string
     {
         return $this->discount;
     }
 
-    public function setDiscount(int $discount): self
+    public function setDiscount(string $discount): self
     {
         $this->discount = $discount;
 
@@ -154,6 +166,36 @@ class Customer
     public function setDescription(string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks[] = $task;
+            $task->setCustomerId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getCustomerId() === $this) {
+                $task->setCustomerId(null);
+            }
+        }
 
         return $this;
     }
