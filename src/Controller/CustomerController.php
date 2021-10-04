@@ -3,13 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Customer;
+use App\Entity\Task;
 use App\Form\CustomerType;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 class CustomerController extends AbstractController
 {
@@ -21,9 +24,13 @@ class CustomerController extends AbstractController
         $customer = $this->getDoctrine()
             ->getRepository(Customer::class)
             ->find($id);
+        $tasks = $this->getDoctrine()
+            ->getRepository(Task::class)
+            ->findBy(['customerId' => $id]);
 
-        return $this->render('customer/customerOne.html.twig', [
-            'customer' => $customer
+        return $this->render('customer/show.html.twig', [
+            'customer' => $customer,
+            'tasks' => $tasks
         ]);
     }
 
@@ -32,6 +39,7 @@ class CustomerController extends AbstractController
      */
     public function edit($id, Request $request, EntityManagerInterface $entityManager): Response
     {
+        
         $customer = $this->getDoctrine()
             ->getRepository(Customer::class)
             ->find($id);
@@ -49,8 +57,8 @@ class CustomerController extends AbstractController
                 ->getManager();
             $entityManager->persist($customer);
             $entityManager->flush();
-
-            return $this->redirectToRoute('customers');
+            $this->addFlash('success', 'Company updated');
+            return $this->redirect('/customer/'.$id);
         }
 
         return $this->render('customer/edit.html.twig',[
@@ -71,15 +79,45 @@ class CustomerController extends AbstractController
             $customer = $form->getData();
             $entityManager = $this->getDoctrine()   
                 ->getManager();
+            $customer->setCreatedAt(new DateTimeImmutable('now'));
             $entityManager->persist($customer);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Company added');
             return $this->redirectToRoute('customers');
         }
          return $this->render('customer/create.html.twig', [
             'form' => $form->createView()
         ]);
     }
-    
 
+    /**
+     * @Route("/customer/{id}/delete", name="delete_customer")
+     */
+    public function delete($id, Request $request, EntityManagerInterface $entityManager)
+    {
+        $entityManager = $this->getDoctrine()
+            ->getManager();
+
+        $customer = $entityManager
+            ->getRepository(Customer::class)
+            ->find($id);
+
+        $task = $this->getDoctrine()
+            ->getRepository(Task::class)
+            ->findBy(['customerId' => $customer->getId()]);
+
+        
+        if (!empty($task)) {
+            $this->addFlash('message', 'Can\'t delete client with open Tasks!');
+
+            return $this->redirect("/customer/$id");
+        }
+
+        $entityManager->remove($customer);
+        $entityManager->flush();
+        $this->addFlash('success', 'Company deleted!');
+
+        return $this->redirectToRoute('customers');
+    }
 }

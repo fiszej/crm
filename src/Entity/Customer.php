@@ -64,6 +64,16 @@ class Customer
      */
     private $tasks;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $company;
+
+    /**
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     */
+    private $createdAt;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
@@ -196,6 +206,30 @@ class Customer
                 $task->setCustomerId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCompany(): ?string
+    {
+        return $this->company;
+    }
+
+    public function setCompany(string $company): self
+    {
+        $this->company = $company;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

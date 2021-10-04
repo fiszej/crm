@@ -17,6 +17,10 @@ class CustomerType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
+                'attr' => ['class' => 'form-control form-control-sm'],
+                'label' => 'Contact person'
+            ])
+            ->add('company', TextType::class, [
                 'attr' => ['class' => 'form-control form-control-sm']
             ])
             ->add('email', EmailType::class, [

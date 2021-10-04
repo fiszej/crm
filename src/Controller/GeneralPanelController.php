@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Customer;
 use App\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -14,10 +15,19 @@ class GeneralPanelController extends AbstractController
     /**
      * @Route("/", name="general_panel")
      */
-    public function index(): Response
-    {
+    public function index(Request $request): Response
+    {  
+        $customers = count($this->getDoctrine()
+            ->getRepository(Customer::class)
+            ->findAll());
+
+        $tasks = count($this->getDoctrine()
+        ->getRepository(Task::class)
+        ->findAll());
+
         return $this->render('general_panel/index.html.twig', [
-            'controller_name' => 'GeneralPanelController',
+            'customers' => $customers,
+            'tasks' => $tasks
         ]);
     }
 
@@ -43,9 +53,10 @@ class GeneralPanelController extends AbstractController
         $tasks = $this->getDoctrine()
             ->getRepository(Task::class)
             ->findAll();
-        
+            
         return $this->render('general_panel/task.html.twig', [
             'tasks' => $tasks
         ]);
     }
+
 }
