@@ -38,9 +38,6 @@ class CustomerType extends AbstractType
             ->add('city', TextType::class, [
                 'attr' => ['class' => 'form-control form-control-sm']
             ])
-            ->add('discount', NumberType::class, [
-                'attr' => ['class' => 'form-control form-control-sm']
-            ])
             ->add('description', TextType::class, [
                 'attr' => ['class' => 'form-control form-control-sm']
             ])

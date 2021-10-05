@@ -11,14 +11,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\TaskType;
+use App\Repository\TaskRepository;
 use DateTime;
 use DateTimeImmutable;
 use Exception;
+use App\Service\TaskService;
 
 class TaskController extends AbstractController
 {
    /**
-     * @Route("/tasks/create", name="create_task")
+     * @Route("/tasks/create", name="task_create")
      */
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -30,9 +32,8 @@ class TaskController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
             
-            $task = $form->getData();
-            $customer = $task->getCustomerId();
             $task->setCustomerId($customer);
+            $task->setLogo($task->logos[rand(0, 7)]);
             $task->setCreatedAt(new DateTimeImmutable('now'));
 
             $entityManager = $this->getDoctrine()   
@@ -49,7 +50,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/{id}", name="show_task")
+     * @Route("/task/{id}", name="task_show")
      */
     public function show($id): Response
     {
@@ -61,7 +62,7 @@ class TaskController extends AbstractController
         $deadline = new DateTime($deadline->format('Y-m-d H:i'));
         $now = new DateTimeImmutable('now');
         $interval = $now->diff($deadline);
-        $timeToDeadline = $interval->format('%h');
+        $timeToDeadline = $interval->format('%d days  %h');
         
         return $this->render('task/show.html.twig', [
             'task' => $task,
@@ -70,7 +71,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/task/{id}/delete", name="delete_task")
+     * @Route("/task/{id}/delete", name="task_delete")
      */
     public function delete($id):Response
     {

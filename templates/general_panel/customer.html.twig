@@ -5,6 +5,8 @@
 {% endblock %}
 
 
+
+
 {% block content %}
 	<div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
 		<div class="nav-wrapper position-relative end-0">
@@ -52,57 +54,48 @@
 											<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Address</th>
 											<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Zip-code</th>
 											<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">City</th>
-											<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Discount</th>
 											<th class="text-secondary opacity-7"></th>
 										</tr>
 									</thead>
 									<tbody>
 										{% for customer in customers %}
-											<tr>
-												<td>
-													<div class="d-flex px-2 py-1 ">
-														<div class="d-flex flex-column justify-content-center">
-															<h6 class="mb-0 text-sm">
-																<a href="/customer/{{ customer.id }}" class="text-secondary font-weight-bold text-xl">
+									<tr>
+										<td>
+											<div class="d-flex px-2">
+												<div>
+													<img src="/img/customer-logo/{{ customer.logo }}" class="avatar avatar-sm rounded-circle me-2">
+												</div>
+												<div class="my-auto">
+													<a href="/customer/{{ customer.id }}" class="text-secondary font-weight-bold text-xl">
 																	{{ customer.company }}
 																</a>
-															</h6>
-															<p class="text-xs text-secondary mb-0">{{ customer.name }}</p>
-														</div>
-													</div>
-												</td>
-												<td class="align-middle text-center text-sm">
-													<p class="text-xs font-weight-bold mb-0">{{ customer.email }}</p>
-												</td>
-												<td class="align-middle text-center text-sm">
-													<p class="text-xs font-weight-bold mb-0">{{ customer.phone }}</p>
-												</td>
-												<td class="align-middle text-center text-sm">
-													<p class="text-xs font-weight-bold mb-0">{{ customer.address }}</p>
-												</td>
-												<td class="align-middle text-center">
-													<p class="text-xs font-weight-bold mb-0">{{ customer.zipcode }}</p>
-												</td>
-												<td class="align-middle text-center">
-													<p class="text-xs font-weight-bold mb-0">{{ customer.city }}</p>
-												</td>
-												<td class="align-middle text-center">
-													<p class="text-xs font-weight-bold mb-0">{{ customer.Discount }}
-														%
-													</p>
-												</td>
-												<td class="align-middle">
-													<a href="/customer/{{ customer.id }}/edit" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-														Edit
-													</a>
-												</td>
-											</tr>
-										{% endfor %}
-									</tbody>
-								</table>
-							</div>
+													<p class="text-xs text-secondary mb-0">{{ customer.name }}</p>
+												</div>
+											</div>
+										</td>
+										<td>
+											<p class="text-sm font-weight-bold mb-0 text-center">{{ customer.email }}
+										<td class="text-center">
+											<span class="text-xs font-weight-bold">{{ customer.phone}}</span>
+										</td>
+											<td class="text-center">
+											<span class="text-xs font-weight-bold">{{ customer.address }}</span>
+										</td>
+										</td>
+											<td class="text-center">
+											<span class="text-xs font-weight-bold">{{ customer.zipcode }}</span>
+										</td>
+										</td>
+											<td class="text-center">
+											<span class="text-xs font-weight-bold">{{ customer.city }}</span>
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
 			</div>
-		{% endblock %}
+		</div>
+	{% endblock %}

@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CustomerController extends AbstractController
 {
     /**
-     * @Route("/customer/{id}", name="show_customer")
+     * @Route("customer/{id}", name="customer_show")
      */
     public function show($id): Response
     {
@@ -67,7 +67,7 @@ class CustomerController extends AbstractController
     }
 
     /**
-     * @Route("/customers/create", name="create_customer")
+     * @Route("/customers/create", name="customer_create")
      */
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -77,6 +77,7 @@ class CustomerController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $customer = $form->getData();
+            $customer->setLogo($customer->logos[rand(0, 8)]);
             $entityManager = $this->getDoctrine()   
                 ->getManager();
             $customer->setCreatedAt(new DateTimeImmutable('now'));
@@ -92,7 +93,7 @@ class CustomerController extends AbstractController
     }
 
     /**
-     * @Route("/customer/{id}/delete", name="delete_customer")
+     * @Route("/customer/{id}/delete", name="customer_delete")
      */
     public function delete($id, Request $request, EntityManagerInterface $entityManager)
     {

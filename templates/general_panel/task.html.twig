@@ -4,8 +4,7 @@
 	Tasks
 {% endblock %}
 
-
-{% block content %}
+	{% block content %}
 	<div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
 		<div class="nav-wrapper position-relative end-0">
 			<ul class="nav nav-pills nav-fill p-1 bg-transparent" role="tablist">
@@ -45,9 +44,8 @@
 							<table class="table align-items-center justify-content-center mb-0">
 								<thead>
 									<tr>
-										<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" >Name</th>
+										<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
 										<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">Comments</th>
-										<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">Description</th>
 										<th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2 text-center">Company</th>
 										<th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2 text-center">Time</th>
 										<th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2 text-center">Deadline</th>
@@ -55,59 +53,40 @@
 									</tr>
 								</thead>
 								<tbody>
-									{% for task in tasks %}
-										<tr>
-											<td>
-
-   											<div class="d-flex align-items-center justify-content-center">
-												<a href="/task/{{ task.id }}" class="text-secondary font-weight-bold text-xs">
+								{% for task in tasks %}
+									<tr>
+										<td>
+											<div class="d-flex px-2">
+												<div>
+													<img src="/img/task-logo/{{ task.logo }}" class="avatar avatar-sm rounded-circle me-2">
+												</div>
+												<div class="my-auto">
+													<a href="/task/{{ task.id }}" class="text-secondary font-weight-bold text-xl">
 													<h6 class="mb-0 text-sm">{{ task.name }}</h6>
-												</a>
+													</a>
+												</div>
 											</div>
-											</td>
-											<td>
-												<div class="d-flex align-items-center justify-content-center">
-													<p class="text-sm font-weight-bold mb-0">{{ task.comments }}</p>
-												</div>
-											</td>
-											<td>
-											<div class="d-flex align-items-center justify-content-center">
-												<span class="text-xs font-weight-bold">
-													{{ task.description }}</span>
-											</td>
-											</div>
-											<td>
-											<div class="d-flex align-items-center justify-content-center">
-												<span class="text-xs font-weight-bold">
-													{% if task.customerId.company %}
-														<a href="/customer/{{ task.customerId.id }}" class="text-secondary font-weight-bold text-xs">{{ task.customerId.company }}
-														</a>
-													{% endif %}
-												</span>
-												</div>
-											</td>
-											<td>
-											<div class="d-flex align-items-center justify-content-center">
-												<span class="text-xs font-weight-bold">
-													{{ task.time }}</span>
-													</div>
-											</td>
-											<td class="align-middle text-center">
-												<div class="d-flex align-items-center justify-content-center">
-													<span class="me-2 text-xs font-weight-bold ">{{ task.deadline|date('Y-m-d H:i') }}</span>
-												</div>
-											</td>
-
-											<td class="align-middle">
-												<a href="/task/{{ task.id }}/edit" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit">
-													Edit
-												</a>
-											
-											</td>
-										</tr>
-									</td>
+										</td>
+										<td>
+											<p class="text-sm font-weight-bold mb-0 text-center">{{ task.comments }}</p>
+										</td>
+										<td class="text-center">
+											<span class="text-xs font-weight-bold">{{ task.customerId.company }}</span>
+										</td>
+											<td class="text-center">
+											<span class="text-xs font-weight-bold">{{ task.time }}</span>
+										</td>
+										</td>
+											<td class="text-center">
+											<span class="text-xs font-weight-bold">{{ task.deadline|date('Y-m-d H:i') }}</span>
+										</td>
+									</tr>
+									{% endfor %}
 								</tbody>
-							</tr>
-						{% endfor %}
-					</tbody>
-				{% endblock %}
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endblock %}

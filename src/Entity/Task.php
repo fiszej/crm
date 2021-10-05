@@ -10,6 +10,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Task
 {
+
+    public $logos = [
+        '1.svg',
+        '2.svg',
+        '3.svg',
+        '4.svg',
+        '5.svg',
+        '6.svg',
+        '7.svg'
+    ];
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -26,11 +37,6 @@ class Task
      * @ORM\Column(type="string", length=255)
      */
     private $comments;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="tasks")
@@ -52,6 +58,11 @@ class Task
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $deadline;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $logo;
 
     public function getId(): ?int
     {
@@ -78,18 +89,6 @@ class Task
     public function setComments(string $comments): self
     {
         $this->comments = $comments;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): self
-    {
-        $this->description = $description;
 
         return $this;
     }
@@ -138,6 +137,18 @@ class Task
     public function setDeadline(?\DateTimeInterface $deadline): self
     {
         $this->deadline = $deadline;
+
+        return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(string $logo): self
+    {
+        $this->logo = $logo;
 
         return $this;
     }

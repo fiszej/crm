@@ -12,6 +12,18 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Customer
 {
+
+    public $logos = [
+        '1.jpg',
+        '2.jpg',
+        '3.jpg',
+        '4.jpg',
+        '5.jpg',
+        '6.jpg',
+        '7.jpg',
+        '8.jpg'
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -52,11 +64,6 @@ class Customer
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $discount;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $description;
 
     /**
@@ -73,6 +80,11 @@ class Customer
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $createdAt;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $logo;
 
     public function __construct()
     {
@@ -156,18 +168,6 @@ class Customer
         return $this;
     }
 
-    public function getDiscount(): ?string
-    {
-        return $this->discount;
-    }
-
-    public function setDiscount(string $discount): self
-    {
-        $this->discount = $discount;
-
-        return $this;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
@@ -230,6 +230,18 @@ class Customer
     public function setCreatedAt(?\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(string $logo): self
+    {
+        $this->logo = $logo;
 
         return $this;
     }

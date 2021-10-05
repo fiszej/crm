@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 use App\Entity\Task;
+use App\Repository\TaskRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,10 +19,10 @@ class GeneralPanelController extends AbstractController
      */
     public function index(Request $request): Response
     {  
+        
         $customers = count($this->getDoctrine()
             ->getRepository(Customer::class)
             ->findAll());
-
         $tasks = count($this->getDoctrine()
         ->getRepository(Task::class)
         ->findAll());
@@ -32,7 +34,7 @@ class GeneralPanelController extends AbstractController
     }
 
     /**
-     * @Route("/customer", name="customers")
+     * @Route("/customers", name="customers")
      */
     public function customers(): Response
     {
@@ -58,5 +60,7 @@ class GeneralPanelController extends AbstractController
             'tasks' => $tasks
         ]);
     }
+
+
 
 }

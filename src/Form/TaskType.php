@@ -30,11 +30,6 @@ class TaskType extends AbstractType
                 'attr' => [
                     'class' => 'form-control form-control-sm'
                 ]])
-            ->add('description', TextType::class, [
-                'attr' => [
-                    'class' => 'form-control form-control-sm'
-                ]
-            ])
             ->add('save', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-secondary',
