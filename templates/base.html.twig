@@ -110,7 +110,7 @@
         <br>
         <hr class="horizontal dark mt-0">
         <li class="nav-item">
-          <a class="nav-link {%if app.request.requestUri == '/employee' %}  active {% endif %}" href="/invoice">
+          <a class="nav-link {%if app.request.requestUri == '/employees' %}  active {% endif %}" href="/employees">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>box-3d-50</title>
@@ -261,21 +261,27 @@
               <input type="text" class="form-control" placeholder="Type here...">
             </div>
           </div>
+          {% if app.user %}
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
+              <a href="{{ path('app_logout') }}" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Sign In</span>
+                <span class="d-sm-inline d-none">Logout</span>
               </a>
             </li>
               </a>
             </li>
           </ul>
+          {% endif %}
         </div>
       </div>
     </nav>
-    <!-- End Navbar -->
-   
+    {# <!-- End Navbar -->
+      {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% endif %} #}
 
     {% block content %}
     

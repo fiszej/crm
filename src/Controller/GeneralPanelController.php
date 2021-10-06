@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Customer;
+use App\Entity\Employee;
 use App\Entity\Task;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,6 +62,18 @@ class GeneralPanelController extends AbstractController
         ]);
     }
 
-
+    /**
+     * @Route("/employees", name="employee")
+     */
+    public function employee(): Response
+    {
+        $employees = $this->getDoctrine()
+            ->getRepository(Employee::class)
+            ->findAll();
+        
+        return $this->render('general_panel/employee.html.twig', [
+            'employees' => $employees
+        ]);
+    }
 
 }
