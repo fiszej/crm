@@ -26,10 +26,8 @@ class EmployeeController extends AbstractController
         $employee = $this->getDoctrine()
             ->getRepository(Employee::class)
             ->find($id);
-        
-        if (!$employee) {
-            return $this->redirectToRoute('employees');
-        }
+      
+
 
         return $this->render('employee/show.html.twig', [
             'employee' => $employee

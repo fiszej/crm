@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EmployeeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -14,6 +16,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Employee implements UserInterface, PasswordAuthenticatedUserInterface
 {
+
+    public $logos = [
+        '1.jpg',
+        '2.jpg',
+        '3.jpg',
+        '4.jpg',
+        '5.jpg',
+        '6.jpg',
+        '7.jpg',
+        '8.jpg'
+    ];
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -36,6 +50,37 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $phone;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="employee")
+     */
+    private $taskId;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $logo;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Mail::class, mappedBy="employee")
+     */
+    private $mails;
+
+    public function __construct()
+    {
+        $this->taskId = new ArrayCollection();
+        $this->mails = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -124,5 +169,101 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTaskId(): Collection
+    {
+        return $this->taskId;
+    }
+
+    public function addTaskId(Task $taskId): self
+    {
+        if (!$this->taskId->contains($taskId)) {
+            $this->taskId[] = $taskId;
+            $taskId->setEmployee($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaskId(Task $taskId): self
+    {
+        if ($this->taskId->removeElement($taskId)) {
+            // set the owning side to null (unless already changed)
+            if ($taskId->getEmployee() === $this) {
+                $taskId->setEmployee(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(string $logo): self
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Mail[]
+     */
+    public function getMails(): Collection
+    {
+        return $this->mails;
+    }
+
+    public function addMail(Mail $mail): self
+    {
+        if (!$this->mails->contains($mail)) {
+            $this->mails[] = $mail;
+            $mail->setEmployee($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMail(Mail $mail): self
+    {
+        if ($this->mails->removeElement($mail)) {
+            // set the owning side to null (unless already changed)
+            if ($mail->getEmployee() === $this) {
+                $mail->setEmployee(null);
+            }
+        }
+
+        return $this;
     }
 }

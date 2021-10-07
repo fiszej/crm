@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+
+{% block title %} Create new message {% endblock %}
+
+
+{% block content %}
+<div class="container">
+   <h1>Create new message </h1>
+       {{ form_start(form) }}
+       
+            {{ form_row(form.subject) }}
+        
+            {{ form_row(form.message) }}
+
+            {{ form_row(form.customer) }}
+
+            {{ form_row(form.employee) }}
+                
+    
+        {{ form_end (form) }}
+</div>
+
+{% endblock %}

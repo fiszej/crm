@@ -49,6 +49,7 @@
 										<th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2 text-center">Company</th>
 										<th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2 text-center">Time</th>
 										<th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2 text-center">Deadline</th>
+										<th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2 text-center">Employee</th>
 										<th></th>
 									</tr>
 								</thead>
@@ -79,6 +80,11 @@
 										</td>
 											<td class="text-center">
 											<span class="text-xs font-weight-bold">{{ task.deadline|date('Y-m-d H:i') }}</span>
+										</td>
+										</td>
+											<td class="text-center">
+												<a href="/employee/{{ task.employee.id }}" class="text-secondary font-weight-bold text-xl">
+											<span class="text-xs font-weight-bold">{{ task.employee.name}}</span>
 										</td>
 									</tr>
 									{% endfor %}

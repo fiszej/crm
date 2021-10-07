@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 use App\Entity\Employee;
+use App\Entity\Mail;
 use App\Entity\Task;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -73,6 +74,20 @@ class GeneralPanelController extends AbstractController
         
         return $this->render('general_panel/employee.html.twig', [
             'employees' => $employees
+        ]);
+    }
+
+    /**
+     * @Route("/mails", name="mails")
+     */
+    public function mails(): Response
+    {
+        $mails = $this->getDoctrine()
+            ->getRepository(Mail::class)
+            ->findAll();
+
+        return $this->render('general_panel/mail.html.twig', [
+            'mails' => $mails
         ]);
     }
 

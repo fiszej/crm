@@ -64,6 +64,11 @@ class Task
      */
     private $logo;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Employee::class, inversedBy="taskId")
+     */
+    private $employee;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -149,6 +154,18 @@ class Task
     public function setLogo(string $logo): self
     {
         $this->logo = $logo;
+
+        return $this;
+    }
+
+    public function getEmployee(): ?Employee
+    {
+        return $this->employee;
+    }
+
+    public function setEmployee(?Employee $employee): self
+    {
+        $this->employee = $employee;
 
         return $this;
     }

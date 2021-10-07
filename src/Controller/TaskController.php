@@ -3,19 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Customer;
+use App\Entity\Employee;
 use App\Entity\Task;
-use App\Form\CustomerType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\TaskType;
-use App\Repository\TaskRepository;
 use DateTime;
 use DateTimeImmutable;
 use Exception;
-use App\Service\TaskService;
 
 class TaskController extends AbstractController
 {
@@ -26,18 +24,26 @@ class TaskController extends AbstractController
     {
         $customer = new Customer();        
         $task = new Task();
+        $employee = new Employee();
         
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            
+        
+            $form = $form->getData();
+            $customer = $form->getCustomerId();
+            $employee = $form->getEmployee();
+           
+            $task->setEmployee($employee);
             $task->setCustomerId($customer);
-            $task->setLogo($task->logos[rand(0, 7)]);
+            
+            $task->setLogo($task->logos[rand(0, 6)]);
             $task->setCreatedAt(new DateTimeImmutable('now'));
-
+            
             $entityManager = $this->getDoctrine()   
                 ->getManager();
+            $entityManager->persist($employee);
             $entityManager->persist($customer);
             $entityManager->persist($task);
             $entityManager->flush();

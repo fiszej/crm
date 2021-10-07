@@ -3,19 +3,16 @@
 namespace App\Form;
 
 use App\Entity\Customer;
+use App\Entity\Employee;
 use App\Entity\Task;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Choice;
 
 class TaskType extends AbstractType
 {
@@ -63,6 +60,13 @@ class TaskType extends AbstractType
             ->add('customerId', EntityType::class, [  
                 'class' => Customer::class,
                 'choice_label' => 'company',
+                'attr' => [
+                    'class' => 'form-control form-control-sm'
+                ]   
+            ])
+            ->add('employee', EntityType::class, [  
+                'class' => Employee::class,
+                'choice_label' => 'name',
                 'attr' => [
                     'class' => 'form-control form-control-sm'
                 ]   

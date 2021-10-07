@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
     /**
-     * @Route("/register", name="app_register")
+     * @Route("/employees/create", name="app_register")
      */
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
@@ -23,6 +23,11 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
+            
+            $user = $form->getData();
+            $role = $user->getRoles();
+            $user->setRoles($role);
+            $user->setLogo($user->logos[rand(0, 8)]);
             $user->setPassword(
             $userPasswordHasherInterface->hashPassword(
                     $user,
@@ -35,7 +40,7 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('employee');
         }
 
         return $this->render('registration/register.html.twig', [

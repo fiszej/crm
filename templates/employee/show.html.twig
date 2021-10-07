@@ -31,7 +31,12 @@
                 <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; {{ employee.email }}</li>
                 <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Role:</strong> &nbsp; 
                 {% for roles in employee.roles %}
-                    {{ roles }}
+                    {% if roles == 'ROLE_ADMIN' %}
+                      Admin,
+                    {% else %}
+                      Employee
+                    {% endif %}
+                    
                 {% endfor %}
                 </li>
                 <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Password:</strong> &nbsp; *** </li>

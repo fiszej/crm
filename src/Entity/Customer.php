@@ -86,9 +86,15 @@ class Customer
      */
     private $logo;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Mail::class, mappedBy="customer")
+     */
+    private $mails;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
+        $this->mails = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -242,6 +248,36 @@ class Customer
     public function setLogo(string $logo): self
     {
         $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Mail[]
+     */
+    public function getMails(): Collection
+    {
+        return $this->mails;
+    }
+
+    public function addMail(Mail $mail): self
+    {
+        if (!$this->mails->contains($mail)) {
+            $this->mails[] = $mail;
+            $mail->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMail(Mail $mail): self
+    {
+        if ($this->mails->removeElement($mail)) {
+            // set the owning side to null (unless already changed)
+            if ($mail->getCustomer() === $this) {
+                $mail->setCustomer(null);
+            }
+        }
 
         return $this;
     }

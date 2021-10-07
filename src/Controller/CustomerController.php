@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Customer;
 use App\Entity\Task;
 use App\Form\CustomerType;
-use App\Helpers\PathHelper;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -38,7 +37,7 @@ class CustomerController extends AbstractController
     /**
      * @Route("/customer/{id}/edit", name="customer_edit")
      */
-    public function edit($id, Request $request, EntityManagerInterface $entityManager, PathHelper $helper): Response
+    public function edit($id, Request $request, EntityManagerInterface $entityManager): Response
     {
         $customer = $this->getDoctrine()
             ->getRepository(Customer::class)
