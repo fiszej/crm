@@ -2,12 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\ApiData;
 use App\Entity\Customer;
 use App\Entity\Employee;
 use App\Entity\Mail;
 use App\Entity\Task;
+use App\Repository\ApiDataRepository;
 use App\Repository\TaskRepository;
+use App\Service\ApiService;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Knp\Bundle\PaginatorBundle\KnpPaginatorBundle;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,13 +31,20 @@ class GeneralPanelController extends AbstractController
         $customers = count($this->getDoctrine()
             ->getRepository(Customer::class)
             ->findAll());
+
         $tasks = count($this->getDoctrine()
         ->getRepository(Task::class)
         ->findAll());
 
+        $usersFromApi = $this->getDoctrine()
+            ->getRepository(ApiData::class)
+            ->findAll();
+
+
         return $this->render('general_panel/index.html.twig', [
             'customers' => $customers,
-            'tasks' => $tasks
+            'tasks' => $tasks,
+            'users' => $usersFromApi
         ]);
     }
 
@@ -80,15 +93,20 @@ class GeneralPanelController extends AbstractController
     /**
      * @Route("/mails", name="mails")
      */
-    public function mails(): Response
+    public function mails(Request $request, PaginatorInterface $paginator): Response
     {
         $mails = $this->getDoctrine()
             ->getRepository(Mail::class)
             ->findAll();
 
+        $pagination = $paginator->paginate(
+            $mails,
+            $request->query->getInt('page', 1),
+            10
+        );
         return $this->render('general_panel/mail.html.twig', [
-            'mails' => $mails
+            //'mails' => $mails,
+            'pagination' =>  $pagination
         ]);
     }
-
 }

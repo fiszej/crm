@@ -50,4 +50,75 @@
             </div>
           </div>
         </div>
+{% if users %}
+        <div class="container-fluid py-4">
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+			{% endfor %}
+			<div class="row">
+				<div class="col-12">
+					<div class="card mb-4">
+						<div class="card-header pb-0">
+							<h6>Users get from API https://randomuser.me/ every day at 00:00:00.</h6>
+						</div>
+						<div class="card-body px-0 pt-0 pb-2">
+							<div class="table-responsive p-0">
+								<table class="table align-items-center mb-0">
+									<thead>
+										<tr>
+											<th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Company</th>
+											<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Email</th>
+											<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Phone</th>
+											<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Address</th>
+											<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Zip-code</th>
+											<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">City</th>
+											<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center"></th>
+										</tr>
+									</thead>
+									<tbody>
+                  
+										{% for user in users %}
+									<tr>
+										<td>
+											<div class="d-flex px-2">
+												<div class="my-auto">
+													<h6 class="mb-0 text-sm">{{ user.name }}</h6>		
+												</div>
+											</div>
+										</td>
+										<td>
+											<p class="text-xs font-weight-bold mb-0 text-center">{{ user.email }}
+										<td class="text-center">
+											<span class="text-xs font-weight-bold">{{ user.phone}}</span>
+										</td>
+											<td class="text-center">
+											<span class="text-xs font-weight-bold">{{ user.address }}</span>
+										</td>
+										</td>
+											<td class="text-center">
+											<span class="text-xs font-weight-bold">{{ user.zipcode }}</span>
+										</td>
+										</td>
+											<td class="text-center">
+											<span class="text-xs font-weight-bold">{{ user.city }}</span>
+										</td>
+                    	<td>
+										  <a href="/api/{{ user.id }}/create">
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  													<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+											</svg>										
+										</a>
+										</td>
+									</tr>
+									{% endfor %}
+                  {% endif %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 {% endblock %}

@@ -11,6 +11,9 @@ use App\Entity\Mail;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\MailType;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 class MailController extends AbstractController
 {
@@ -66,13 +69,31 @@ class MailController extends AbstractController
     /**
      * @Route("/mail/{id}/sent", name="mails_sent")
      */
-    public function sentMail($id, EntityManagerInterface $entityManager): Response
+    public function sentMail($id, EntityManagerInterface $entityManagerm, MailerInterface $mailer): Response
     {
         $mail = $this->getDoctrine()
             ->getRepository(Mail::class)
             ->find($id);
         
+        if ($mail->getStatus() == 1) {
+
+            $this->addFlash('failSend', 'Message is already sent');
+            return $this->redirectToRoute('mails_show', [
+            'id' => $id
+            ]);
+        }
+
+        $email = (new Email())
+            ->from('crm@mbryla89.webd.pro')
+            ->to('brylaaaa@gmail.com')
+            ->subject('Test CRM')
+            ->text('This is test message');
+
+        $mailer->send($email);
+
         $mail->setStatus(1);
+        $mail->setSentAt(new \DateTimeImmutable('now'));
+
         
         $entityManager = $this->getDoctrine()
             ->getManager();

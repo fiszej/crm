@@ -12,15 +12,23 @@
 				<div class="card h-100">
 					<div class="card-header pb-0 p-3">
 						<div class="row">
+													<small class="text-center"><strong class="text-dark">Created at:</strong> {{ mail.createdAt|date('H:i  jS F Y')}} </small>
+													
 							<div class="col-md-8 d-flex align-items-center">
 								<h6 class="mb-0">Mail
 								</h6>
 							</div>
+						
 							{% if mail.status == 0 %}
 							
 							<div class="col-md-4 text-end">
 								<a href="/mail/{{ mail.id }}/edit">
-									<i class="fas fa-user-edit text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Profile"></i>
+									<i class="fas fa-user-edit text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"></i>
+								</a>
+							
+							
+								<a href="/mail/{{ mail.id }}/delete">
+									<i class="fas fa-user-edit text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"></i>
 								</a>
 							</div>
 							{% endif %}
@@ -29,6 +37,13 @@
 										{{ message }}
 									</div>
 							{% endfor %}
+							
+								{% for message in app.flashes('failSend') %}
+									<div class="alert alert-success">
+										{{ message }}
+									</div>
+							{% endfor %}
+							
 						</div>
 					</div>
 					<div class="card-body p-3">
@@ -57,13 +72,11 @@
 								<strong class="text-dark">Status:</strong>
 								&nbsp;
 								{% if mail.status == 1  %}
-									Message was sent
-
+									<small class="text-center"><strong class="text-dark">Sent at:</strong> {{ mail.sentAt|date('Y/m/d H:i')}} </small>
 								{% else %}
-
 									Waiting to sent <br><br>
 								<a href="/mail/{{ mail.id }}/sent" class="btn btn-primary" >
-									Sent
+								Sent
 								</a>
 								{% endif %}
 							</li>

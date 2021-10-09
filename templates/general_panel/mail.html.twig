@@ -56,9 +56,10 @@
 										</tr>
 									</thead>
 									<tbody>
-										{% for mail in mails %}
-									<tr>
-										<td>
+										{% for mail in pagination %}
+									<tr class="table-{% if mail.status == 1 %}success{% else %}danger {% endif %}"> 
+									
+										<td >
 											<div class="d-flex px-2">
 							
 												<div class="my-auto">
@@ -77,9 +78,15 @@
 											<td class="text-center">
 											<span class="text-xs font-weight-bold">{{ mail.employee.name }}</span>
 										</td>
-										</td>
+										</td >
 											<td class="text-center">
-											<span class="text-xs font-weight-bold">{{ mail.status }}</span>
+											<span class="text-xs font-weight-bold">
+											{% if mail.status == 1 %}
+												<span style="color:green">SENT</span>
+											{% else %}
+												<span style="color:red">WAITING</span>
+												{% endif %}									
+											</span>
 										</td>
 										<td>
 										<a href="/mail/{{ mail.id }}">
@@ -92,9 +99,13 @@
 									{% endfor %}
 								</tbody>
 							</table>
+							
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<div class="navigation">
+    {{ knp_pagination_render(pagination) }}
+	</div>
 	{% endblock %}

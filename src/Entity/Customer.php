@@ -281,4 +281,5 @@ class Customer
 
         return $this;
     }
+
 }
