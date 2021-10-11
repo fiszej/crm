@@ -95,6 +95,8 @@ class Customer
     {
         $this->tasks = new ArrayCollection();
         $this->mails = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable('now');
+        $this->logo = $this->logos[rand(0, 7)];
     }
 
     public function getId(): ?int

@@ -5,49 +5,43 @@ namespace App\Controller;
 use App\Entity\Customer;
 use App\Entity\Employee;
 use App\Entity\Task;
+use App\Factory\TaskFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\TaskType;
+use App\Repository\TaskRepository;
 use DateTime;
 use DateTimeImmutable;
 use Exception;
 
 class TaskController extends AbstractController
 {
+    private $repository;
+
+    public function __construct(TaskRepository $repository)
+    {
+        $this->repository = $repository;
+    }
    /**
      * @Route("/tasks/create", name="task_create")
      */
-    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, TaskFactory $factory): Response
     {
-        $customer = new Customer();        
-        $task = new Task();
-        $employee = new Employee();
-        
-        $form = $this->createForm(TaskType::class, $task);
+        $form = $this->createForm(TaskType::class);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-        
             $form = $form->getData();
-            $customer = $form->getCustomerId();
-            $employee = $form->getEmployee();
-           
-            $task->setEmployee($employee);
-            $task->setCustomerId($customer);
-            
-            $task->setLogo($task->logos[rand(0, 6)]);
-            $task->setCreatedAt(new DateTimeImmutable('now'));
-            
-            $entityManager = $this->getDoctrine()   
-                ->getManager();
-            $entityManager->persist($employee);
-            $entityManager->persist($customer);
-            $entityManager->persist($task);
-            $entityManager->flush();
+            $data = $factory->createTask($form);
 
+            foreach ($data as $key => $object) {
+                $entityManager->persist($object);
+            }
+            $entityManager->flush();
+     
             return $this->redirectToRoute('tasks');
         }
          return $this->render('task/create.html.twig', [
@@ -60,9 +54,12 @@ class TaskController extends AbstractController
      */
     public function show($id): Response
     {
-        $task = $this->getDoctrine()
-            ->getRepository(Task::class)
+        $task = $this->repository
             ->find($id);
+        if ($task === null) {
+        
+            return new Response($this->renderView('exception/404.html.twig', [],  404));
+        }
  
         $deadline = $task->getDeadline();
         $deadline = new DateTime($deadline->format('Y-m-d H:i'));
@@ -81,14 +78,12 @@ class TaskController extends AbstractController
      */
     public function delete($id):Response
     {
-        $entityManager = $this->getDoctrine()
-            ->getManager();
-        $task = $this->getDoctrine()
-            ->getRepository(Task::class)
-            ->find($id);
-        $entityManager->remove($task);
-        $entityManager->flush();
-
+        $task = $this->repository->find($id);
+        if ($task === null) {
+            
+            return new Response($this->renderView('exception/404.html.twig', [],  404));
+        }
+        $this->repository->removeTask($task);
         $this->addFlash('success', 'Task deleted!');
 
         return $this->redirectToRoute('tasks');
@@ -99,23 +94,16 @@ class TaskController extends AbstractController
      */
     public function edit($id, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $task = $this->getDoctrine()
-            ->getRepository(Task::class)
-            ->find($id);
-        
+        $task = $this->repository->find($id);
         if ($task === null) {
-            throw new Exception('Not found customer');
+            return new Response($this->renderView('exception/404.html.twig', [],  404));
         }
 
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $task = $form->getData();
-            $entityManager = $this->getDoctrine()
-                ->getManager();
-            $entityManager->persist($task);
-            $entityManager->flush();
+            $this->repository->save($form->getData());
             $this->addFlash('success', 'Task updated');
             return $this->redirect('/task/'.$id);
         }

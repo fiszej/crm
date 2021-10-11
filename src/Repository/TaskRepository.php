@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Task;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 
@@ -16,45 +17,22 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TaskRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    private $entityManager;
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
+    {   
+        $this->entityManager = $entityManager;
         parent::__construct($registry, Task::class);
     }
 
-
-    // /**
-    //  * @return Task[] Returns an array of Task objects
-    //  */
-    
-    // public function findByExampleField($value)
-    // {
-    //     return $this->createQueryBuilder('t')
-    //         ->where('t.createdAt BETWEEN :today AND :yesterday')
-    //         ->setParameter('today', '2021-10-05 19:38:12')
-    //         ->setParameter('yesterday','2021-10-05 19:00:12')
-    //         ->getQuery()
-    //         ->getResult();
-        
-        
-    //         // ->andWhere('t.exampleField = :val')
-    //         // ->setParameter('val', $value)
-    //         // ->orderBy('t.id', 'ASC')
-    //         // ->setMaxResults(10)
-    //         // ->getQuery()
-    //         // ->getResult()
-    //     ;
-    // }
-    
-
-    /*
-    public function findOneBySomeField($value): ?Task
+    public function removeTask(Task $task): void
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $this->entityManager->remove($task);
+        $this->entityManager->flush();
     }
-    */
+
+    public function save(Task $task): void
+    {
+        $this->entityManager->persist($task);
+        $this->entityManager->flush();
+    }
 }

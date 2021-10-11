@@ -11,25 +11,31 @@ use App\Entity\Mail;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\MailType;
-use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use App\Repository\MailRepository;
 
 class MailController extends AbstractController
 {
+    private $mailRepository;
+
+    public function __construct(MailRepository $mailRepository)
+    {
+        $this->mailRepository = $mailRepository;
+    }
+
     /**
      * @Route("/mail/{id}", name="mails_show")
      */
     public function show($id): Response
     {
-        $mail = $this->getDoctrine()
-            ->getRepository(Mail::class)
-            ->find($id);
+        $mail = $this->mailRepository->find($id);
         
         return $this->render('mail/show.html.twig', [
             'mail' => $mail,
         ]);
     }
+    
     /**
      * @Route("/mails/create", name="mails_create")
      */

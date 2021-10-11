@@ -4,15 +4,12 @@ namespace App\Controller;
 
 use App\Entity\ApiData;
 use App\Entity\Customer;
-use App\Entity\Employee;
-use App\Entity\Mail;
 use App\Entity\Task;
 use App\Repository\ApiDataRepository;
+use App\Repository\CustomerRepository;
+use App\Repository\EmployeeRepository;
+use App\Repository\MailRepository;
 use App\Repository\TaskRepository;
-use App\Service\ApiService;
-use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use Knp\Bundle\PaginatorBundle\KnpPaginatorBundle;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,12 +19,30 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GeneralPanelController extends AbstractController
 {
+    private $customersRepository;
+    private $taskRepository;
+    private $apiDataRepository;
+    private $employeeRepository;
+    private $mailRepository;
+
+    public function __construct(
+        CustomerRepository $customerRepository,
+        TaskRepository $taskRepository,
+        ApiDataRepository $apiDataRepository,
+        EmployeeRepository $employeeRepository,
+        MailRepository $mailRepository
+        )   {
+        $this->customersRepository = $customerRepository;
+        $this->taskRepository = $taskRepository;
+        $this->apiDataRepository = $apiDataRepository;
+        $this->employeeRepository = $employeeRepository;
+        $this->mailRepository = $mailRepository;
+    }
     /**
      * @Route("/", name="general_panel")
      */
-    public function index(Request $request): Response
+    public function index( ): Response
     {  
-        
         $customers = count($this->getDoctrine()
             ->getRepository(Customer::class)
             ->findAll());
@@ -39,7 +54,6 @@ class GeneralPanelController extends AbstractController
         $usersFromApi = $this->getDoctrine()
             ->getRepository(ApiData::class)
             ->findAll();
-
 
         return $this->render('general_panel/index.html.twig', [
             'customers' => $customers,
@@ -53,12 +67,8 @@ class GeneralPanelController extends AbstractController
      */
     public function customers(): Response
     {
-        $customers = $this->getDoctrine()
-            ->getRepository(Customer::class)
-            ->findAll();
-        
         return $this->render('general_panel/customer.html.twig', [
-            'customers' => $customers
+            'customers' => $this->customersRepository->findAll()
         ]);
     }
 
@@ -67,12 +77,9 @@ class GeneralPanelController extends AbstractController
      */
     public function tasks(): Response
     {
-        $tasks = $this->getDoctrine()
-            ->getRepository(Task::class)
-            ->findAll();
-            
+       
         return $this->render('general_panel/task.html.twig', [
-            'tasks' => $tasks
+            'tasks' => $this->taskRepository->findAll()
         ]);
     }
 
@@ -80,13 +87,9 @@ class GeneralPanelController extends AbstractController
      * @Route("/employees", name="employee")
      */
     public function employee(): Response
-    {
-        $employees = $this->getDoctrine()
-            ->getRepository(Employee::class)
-            ->findAll();
-        
+    {    
         return $this->render('general_panel/employee.html.twig', [
-            'employees' => $employees
+            'employees' => $this->employeeRepository->findAll()
         ]);
     }
 
@@ -95,18 +98,14 @@ class GeneralPanelController extends AbstractController
      */
     public function mails(Request $request, PaginatorInterface $paginator): Response
     {
-        $mails = $this->getDoctrine()
-            ->getRepository(Mail::class)
-            ->findAll();
-
+        $mails = $this->mailRepository->findAll();
         $pagination = $paginator->paginate(
             $mails,
             $request->query->getInt('page', 1),
             10
         );
         return $this->render('general_panel/mail.html.twig', [
-            //'mails' => $mails,
-            'pagination' =>  $pagination
+            'mails' =>  $pagination
         ]);
     }
 }

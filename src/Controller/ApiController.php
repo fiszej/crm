@@ -26,7 +26,7 @@ class ApiController extends AbstractController
             ->find($id);
         
         if ($apiData === null) {
-            throw new Exception('Not found customer');
+            return new Response($this->renderView('exception/404.html.twig', [],  404));
         }
 
         $customer = new Customer();

@@ -2,32 +2,37 @@
 
 namespace App\Controller;
 
-use App\Entity\ApiData;
-use App\Entity\Customer;
-use App\Entity\Task;
 use App\Form\CustomerType;
-use DateTimeImmutable;
+use App\Repository\CustomerRepository;
+use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 class CustomerController extends AbstractController
 {
+    private $repository;
+    private $taskRepository;
+
+    public function __construct(CustomerRepository $repository, TaskRepository $taskRepository)
+    {
+        $this->repository = $repository;
+        $this->taskRepository = $taskRepository;
+    }
     /**
      * @Route("/customer/{id}", name="customer_show")
      */
     public function show($id): Response
     {
-        $customer = $this->getDoctrine()
-            ->getRepository(Customer::class)
-            ->find($id);
-        $tasks = $this->getDoctrine()
-            ->getRepository(Task::class)
-            ->findBy(['customerId' => $id]);
+        $customer = $this->repository->find($id); 
+
+        if ($customer === null) {
+            return new Response($this->renderView('exception/404.html.twig', [],  404));
+        }
+
+        $tasks = $this->taskRepository->findBy(['customerId' => $id]);
 
         return $this->render('customer/show.html.twig', [
             'customer' => $customer,
@@ -38,26 +43,22 @@ class CustomerController extends AbstractController
     /**
      * @Route("/customer/{id}/edit", name="customer_edit")
      */
-    public function edit($id, Request $request, EntityManagerInterface $entityManager): Response
+    public function edit($id, Request $request): Response
     {
-        $customer = $this->getDoctrine()
-            ->getRepository(Customer::class)
-            ->find($id);
-        
-        if ($customer === null) {
-            throw new Exception('Not found customer');
-        }
+        $customer = $this->repository->find($id);
 
+        if ($customer === null) {
+            return new Response($this->renderView('exception/404.html.twig', [],  404));
+        }
+        
         $form = $this->createForm(CustomerType::class, $customer);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
             $customer = $form->getData();
-            $entityManager = $this->getDoctrine()
-                ->getManager();
-            $entityManager->persist($customer);
-            $entityManager->flush();
+            $this->repository->save($customer);
             $this->addFlash('success', 'Company updated');
+
             return $this->redirect('/customer/'.$id);
         }
 
@@ -69,22 +70,16 @@ class CustomerController extends AbstractController
     /**
      * @Route("/customers/create", name="customer_create")
      */
-    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    public function create(Request $request): Response
     {
-        $customer = new Customer();
-        $form = $this->createForm(CustomerType::class, $customer);
+        $form = $this->createForm(CustomerType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $customer = $form->getData();
-            $customer->setLogo($customer->logos[rand(0, 8)]);
-            $entityManager = $this->getDoctrine()   
-                ->getManager();
-            $customer->setCreatedAt(new DateTimeImmutable('now'));
-            $entityManager->persist($customer);
-            $entityManager->flush();
-
+            $this->repository->save($customer);
             $this->addFlash('success', 'Company added');
+
             return $this->redirectToRoute('customers');
         }
          return $this->render('customer/create.html.twig', [
@@ -95,31 +90,24 @@ class CustomerController extends AbstractController
     /**
      * @Route("/customer/{id}/delete", name="customer_delete")
      */
-    public function delete($id, Request $request, EntityManagerInterface $entityManager)
+    public function delete($id): Response
     {
-        $entityManager = $this->getDoctrine()
-            ->getManager();
+        $customer = $this->repository->find($id);
 
-        $customer = $entityManager
-            ->getRepository(Customer::class)
-            ->find($id);
-
-        $task = $this->getDoctrine()
-            ->getRepository(Task::class)
-            ->findBy(['customerId' => $customer->getId()]);
-
+        if ($customer === null) {
+            return new Response($this->renderView('exception/404.html.twig', [],  404));
+        }
         
+        $tasks = $this->taskRepository->findBy(['customerId' => $id]);
+  
         if (!empty($task)) {
             $this->addFlash('message', 'Can\'t delete client with open Tasks!');
-
             return $this->redirect("/customer/$id");
         }
 
-        $entityManager->remove($customer);
-        $entityManager->flush();
+        $this->repository->removeCustomer($customer);
         $this->addFlash('success', 'Company deleted!');
 
         return $this->redirectToRoute('customers');
     }
-    
 }
