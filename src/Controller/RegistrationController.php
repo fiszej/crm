@@ -9,7 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+/**
+ * @Security("is_granted('ROLE_ADMIN')")
+ */
 class RegistrationController extends AbstractController
 {
     /**
@@ -26,7 +30,7 @@ class RegistrationController extends AbstractController
             $user = $form->getData();
             $role = $user->getRoles();
             $user->setRoles($role);
-            $user->setLogo($user->logos[rand(0, 8)]);
+            $user->setLogo($user->logos[rand(0, 7)]);
             $user->setPassword(
             $userPasswordHasherInterface->hashPassword(
                     $user,

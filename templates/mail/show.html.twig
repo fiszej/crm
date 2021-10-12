@@ -54,6 +54,7 @@
 								<strong class="text-dark">Company:
 								</strong>
 								&nbsp;
+								<img src="/img/customer-logo/{{ mail.customer.logo }}" class="avatar avatar-sm rounded-circle me-2">
 								{{ mail.customer.company }}</li>
 							<li class="list-group-item border-0 ps-0 text-sm">
 								<strong class="text-dark">Subject:</strong>
@@ -62,7 +63,9 @@
 							<li class="list-group-item border-0 ps-0 text-sm">
 								<strong class="text-dark">Employee:</strong>
 								&nbsp;
-								{{ mail.employee.name }}</li>
+								<img src="/img/customer-logo/{{ mail.employee.logo }}" class="avatar avatar-sm rounded-circle me-2">
+								{{ mail.employee.name }}
+								</li>
 								<li class="list-group-item border-0 ps-0 text-sm">
 								<strong class="text-dark">Message:</strong><hr>
 								&nbsp;
@@ -72,7 +75,7 @@
 								<strong class="text-dark">Status:</strong>
 								&nbsp;
 								{% if mail.status == 1  %}
-									<small class="text-center"><strong class="text-dark">Sent at:</strong> {{ mail.sentAt|date('Y/m/d H:i')}} </small>
+									<small class="text-center"><strong class="text-dark">Sent at:</strong> {{ mail.sentAt|date('H:i  jS F Y')}} </small>
 								{% else %}
 									Waiting to sent <br><br>
 								<a href="/mail/{{ mail.id }}/sent" class="btn btn-primary" >

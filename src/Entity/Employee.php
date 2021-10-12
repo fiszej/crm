@@ -76,10 +76,17 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $mails;
 
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
+    private $createdAt;
+
     public function __construct()
     {
         $this->taskId = new ArrayCollection();
         $this->mails = new ArrayCollection();
+        $this->logo = $this->logos[rand(0, 7)];
+        $this->createdAt = new \DateTimeImmutable('now');
     }
 
     public function getId(): ?int
@@ -263,6 +270,18 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
                 $mail->setEmployee(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

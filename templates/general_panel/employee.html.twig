@@ -41,7 +41,7 @@
 				<div class="col-12">
 					<div class="card mb-4">
 						<div class="card-header pb-0">
-							<h6>Customers</h6>
+							<h6>Employees</h6>
 						</div>
 						<div class="card-body px-0 pt-0 pb-2">
 							<div class="table-responsive p-0">
@@ -60,8 +60,8 @@
 									<tr>
 										<td>
 											<div class="d-flex px-2">
-												<div>
-													<img src="/img/customer-logo/" class="avatar avatar-sm rounded-circle me-2">
+											 <div>
+												<img src="/img/customer-logo/{{ employee.logo }}" class="avatar avatar-sm rounded-circle me-2">
 												</div>
 												<div class="my-auto">
 													<a href="/employee/{{ employee.id }}" class="text-secondary font-weight-bold text-xl">
@@ -80,7 +80,7 @@
 										</td>
 										</td>
 											<td class="text-center">
-											<span class="text-xs font-weight-bold">tasks</span>
+											<span class="text-xs font-weight-bold">Task</span>
 										</td>
 									</tr>
 									{% endfor %}

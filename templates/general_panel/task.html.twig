@@ -28,6 +28,7 @@
 				</li>
 			</div>
 		</div>
+<div class="container-fluid py-4">
 		{% for message in app.flashes('success') %}
 			<div class="alert alert-success">
 				{{ message }}
@@ -72,6 +73,7 @@
 											<p class="text-sm font-weight-bold mb-0 text-center">{{ task.comments }}</p>
 										</td>
 										<td class="text-center">
+											<img src="/img/customer-logo/{{ task.customerId.logo }}" class="avatar avatar-sm rounded-circle me-2">
 											<span class="text-xs font-weight-bold">{{ task.customerId.company }}</span>
 										</td>
 											<td class="text-center">

@@ -15,8 +15,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 
+
+/**
+ * @Security("is_granted('ROLE_USER')")
+ */
 class GeneralPanelController extends AbstractController
 {
     private $customersRepository;
@@ -76,8 +81,7 @@ class GeneralPanelController extends AbstractController
      * @Route("/tasks", name="tasks")
      */
     public function tasks(): Response
-    {
-       
+    {   
         return $this->render('general_panel/task.html.twig', [
             'tasks' => $this->taskRepository->findAll()
         ]);
@@ -94,10 +98,11 @@ class GeneralPanelController extends AbstractController
     }
 
     /**
+     * 
      * @Route("/mails", name="mails")
      */
     public function mails(Request $request, PaginatorInterface $paginator): Response
-    {
+    {  
         $mails = $this->mailRepository->findAll();
         $pagination = $paginator->paginate(
             $mails,

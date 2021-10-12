@@ -39,7 +39,4 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/^, roles: ROLE_USER }
         
-        - { path: ^/$, allow_if: "is_fully_authenticated()" }
-        - { path: ^/customers$, allow_if: "is_fully_authenticated()" }
-        - { path: ^/tasks$, allow_if: "is_fully_authenticated()" }
 

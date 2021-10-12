@@ -14,7 +14,11 @@ use App\Form\MailType;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use App\Repository\MailRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+/**
+ * @Security("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
+ */
 class MailController extends AbstractController
 {
     private $mailRepository;
@@ -77,12 +81,13 @@ class MailController extends AbstractController
      */
     public function sentMail($id, EntityManagerInterface $entityManagerm, MailerInterface $mailer): Response
     {
-        $mail = $this->getDoctrine()
-            ->getRepository(Mail::class)
-            ->find($id);
+        $mail = $this->mailRepository->find($id);
+
+        if ($mail === null) {
+            return new Response($this->renderView('exception/404.html.twig', [],  404));
+        }
         
         if ($mail->getStatus() == 1) {
-
             $this->addFlash('failSend', 'Message is already sent');
             return $this->redirectToRoute('mails_show', [
             'id' => $id
@@ -97,16 +102,9 @@ class MailController extends AbstractController
 
         $mailer->send($email);
 
-        $mail->setStatus(1);
-        $mail->setSentAt(new \DateTimeImmutable('now'));
-
-        
-        $entityManager = $this->getDoctrine()
-            ->getManager();
-        $entityManager->persist($mail);
-        $entityManager->flush();
-
+        $this->mailRepository->saveAfterSent($mail);
         $this->addFlash('successMail', 'Message sent');
+
         return $this->redirectToRoute('mails_show', [
             'id' => $id
         ]);

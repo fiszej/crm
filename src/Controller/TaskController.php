@@ -2,9 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Customer;
-use App\Entity\Employee;
-use App\Entity\Task;
 use App\Factory\TaskFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,8 +12,11 @@ use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use DateTime;
 use DateTimeImmutable;
-use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+/**
+ * @Security("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
+ */
 class TaskController extends AbstractController
 {
     private $repository;

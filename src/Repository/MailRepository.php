@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Mail;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,37 +15,35 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class MailRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $entityManager;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
     {
+        $this->entityManager = $entityManager;
         parent::__construct($registry, Mail::class);
     }
 
-    // /**
-    //  * @return Mail[] Returns an array of Mail objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function saveAfterSent(Mail $mail)
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $mail->setStatus(1);
+        $mail->setSentAt(new \DateTimeImmutable('now'));
+        $this->entityManager->persist($mail);
+        $this->entityManager->flush();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Mail
+    public function getByDate(\Datetime $date)
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
+        $from = new \DateTime($date->format("Y-m-d")." 00:00:00");
+        $to   = new \DateTime($date->format("Y-m-d")." 23:59:59");
+
+        $qb = $this->createQueryBuilder("e");
+        $qb
+            ->andWhere('e.createdAt BETWEEN :from AND :to')
+            ->setParameter('from', $from )
+            ->setParameter('to', $to)
         ;
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
     }
-    */
 }
