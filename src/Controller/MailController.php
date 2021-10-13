@@ -14,10 +14,10 @@ use App\Form\MailType;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use App\Repository\MailRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
- * @Security("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
+ * @IsGranted("ROLE_USER")
  */
 class MailController extends AbstractController
 {

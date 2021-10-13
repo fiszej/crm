@@ -11,10 +11,10 @@ use App\Form\CustomerType;
 use App\Entity\Customer;
 use DateTimeImmutable;
 use App\Entity\ApiData;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
- * @Security("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
+ * @IsGranted("ROLE_USER")
  */
 class ApiController extends AbstractController
 {

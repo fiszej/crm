@@ -12,10 +12,11 @@ use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use DateTime;
 use DateTimeImmutable;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 /**
- * @Security("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
+ * @IsGranted("ROLE_USER")
  */
 class TaskController extends AbstractController
 {
