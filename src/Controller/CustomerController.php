@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\CustomerType;
+use App\Repository\CommentsRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,11 +20,13 @@ class CustomerController extends AbstractController
 {
     private $repository;
     private $taskRepository;
+    private $commentsRepository;
 
-    public function __construct(CustomerRepository $repository, TaskRepository $taskRepository)
+    public function __construct(CustomerRepository $repository, TaskRepository $taskRepository, CommentsRepository $commentsRepository)
     {
         $this->repository = $repository;
         $this->taskRepository = $taskRepository;
+        $this->commentsRepository = $commentsRepository;
     }
     /**
      * @Route("/customer/{id}", name="customer_show")
@@ -31,16 +34,18 @@ class CustomerController extends AbstractController
     public function show($id): Response
     {
         $customer = $this->repository->find($id); 
+        $comments = $this->commentsRepository->findBy(['customer' => $id]);
 
         if ($customer === null) {
             return new Response($this->renderView('exception/404.html.twig', [],  404));
         }
 
         $tasks = $this->taskRepository->findBy(['customerId' => $id]);
-
+        
         return $this->render('customer/show.html.twig', [
             'customer' => $customer,
-            'tasks' => $tasks
+            'tasks' => $tasks,
+            'comments' => $comments
         ]);
     }
 
@@ -114,4 +119,5 @@ class CustomerController extends AbstractController
 
         return $this->redirectToRoute('customers');
     }
+
 }

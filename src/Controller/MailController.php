@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Mail;
+use App\Factory\MailFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\MailType;
@@ -43,31 +44,20 @@ class MailController extends AbstractController
     /**
      * @Route("/mails/create", name="mails_create")
      */
-    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, MailFactory $factory): Response
     {
-        $mail = new Mail();
-        $customer = new Customer();
-        $employee = new Employee();
-
-        $form = $this->createForm(MailType::class, $mail);
+        $form = $this->createForm(MailType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $form = $form->getData();
+            $data = $factory->createMail($form);
 
-            $customer = $form->getCustomer();
-            $employee = $form->getEmployee();
+            foreach ($data as $key => $object) {
+                $entityManager->persist($object);
+            }
 
-            $mail->setCustomer($customer);
-            $mail->setEmployee($employee);
-
-            $entityManager = $this->getDoctrine()
-                ->getManager();
-            $entityManager->persist($mail);
-            $entityManager->persist($customer);
-            $entityManager->persist($employee);
             $entityManager->flush();
-
             return $this->redirectToRoute('mails');
         }
 
