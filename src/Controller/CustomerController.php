@@ -28,6 +28,17 @@ class CustomerController extends AbstractController
         $this->taskRepository = $taskRepository;
         $this->commentsRepository = $commentsRepository;
     }
+
+    /**
+     * @Route("/customers", name="customers")
+     */
+    public function index(): Response
+    {
+        return $this->render('general_panel/customer.html.twig', [
+            'customers' => $this->repository->findAll()
+        ]);
+    }
+
     /**
      * @Route("/customer/{id}", name="customer_show")
      */

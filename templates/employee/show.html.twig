@@ -18,12 +18,12 @@
                 <div class="col-md-8 d-flex align-items-center">
                   <h6 class="mb-0">Employee information</h6>
                 </div>
+                 {% if is_granted('ROLE_ADMIN') %}
                 <div class="col-md-4 text-end">
-                  <a href="/employee/{{ employee.id }}/edit">
+                    <a href="{{ path('employee_edit', {id: employee.id})}}">
                     <i class="fas fa-user-edit text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Profile"></i>
                   </a>
-                    {% if is_granted('ROLE_ADMIN') %}
-                       <a href="/employee/{{ employee.id }}/delete">
+                    <a href="{{ path('employee_delete', {id: employee.id})}}">
                     <i class="ni ni-fat-remove text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete employee"></i>
                   </a>
                     {% endif %}
@@ -32,6 +32,7 @@
             </div>
             <div class="card-body p-3">
               <hr class="horizontal gray-light my-4">
+              	<img src="/img/customer-logo/{{ employee.logo }}" class="avatar avatar-xxl rounded-circle me-2">
               <ul class="list-group">
                 <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; {{ employee.email }}</li>
                 <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Role:</strong> &nbsp; 

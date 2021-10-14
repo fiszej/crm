@@ -20,10 +20,10 @@
 					</div>
 
 					<div class="col-md-4 text-end">
-						<a href="/customer/{{ customer.id }}/edit">
+						<a href="{{ path('customer_edit', {id: customer.id})}}">
 							<i class="fas fa-user-edit text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"></i>
 						</a>
-						<a href="/customer/{{ customer.id }}/delete">
+						<a href="{{ path('customer_delete', {id: customer.id})}}">
 							<i class="ni ni-fat-remove text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"></i>
 						</a>
 					</div>
@@ -54,7 +54,8 @@
 					<li class="list-group-item border-0 ps-0 text-sm">
 						<strong class="text-dark">Full Name:</strong>
 						&nbsp;
-						{{ customer.name }}</li>
+						{{ customer.name }}
+						<img src="/img/customer-logo/{{ customer.logo }}" class="avatar avatar-sm rounded-circle me-2"></li>
 					<li class="list-group-item border-0 ps-0 text-sm">
 						<strong class="text-dark">Mobile:</strong>
 						&nbsp;
@@ -62,7 +63,8 @@
 					<li class="list-group-item border-0 ps-0 text-sm">
 						<strong class="text-dark">Email:</strong>
 						&nbsp;
-						{{ customer.email }}</li>
+						<a href="{{ path('mails_create') }}">
+						{{ customer.email }}</a></li>
 					<li class="list-group-item border-0 ps-0 text-sm">
 						<strong class="text-dark">Address:</strong>
 						&nbsp;
@@ -111,7 +113,7 @@
 								<div class="d-flex align-items-start flex-column justify-content-center">
 									<h6 class="mb-0 text-sm">{{ task.name }}</h6>
 								</div>
-								<a class="btn btn-link pe-3 ps-0 mb-0 ms-auto" href="/task/{{ task.id }}">Open</a>
+								<a class="btn btn-link pe-3 ps-0 mb-0 ms-auto" href="{{ path('task_show', {id: task.id })}}">Open</a>
 							</li>
 						{% endfor %}
 					{% endif %}
@@ -147,8 +149,12 @@
 			</div>
 				<div>
 				<form action="/comment/create/{{ customer.id }}" method="POST">
-						<input class="form form-control-sm" type="text" name="comment">
-						<input class="btn btn-success" type="submit" name ="submit" value="Add Comment">
+					<div class="form-group">
+    					<div class="input-group input-group-sm">
+							<input class="form form-control" type="text" name="comment"><br>
+							<input class="btn btn-primary btn-lg w-100" type="submit" name ="submit" value="Add Comment">
+						</div>
+					</div>
 				</form>
 				</div>
 		</div>

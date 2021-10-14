@@ -19,9 +19,9 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 class EmployeeRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     private $entityManager;
-    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $registry)
     {
-        $this->entityManager = $entityManager;
+        
         parent::__construct($registry, Employee::class);
     }
 
@@ -57,8 +57,14 @@ class EmployeeRepository extends ServiceEntityRepository implements PasswordUpgr
 
     public function delete(Employee $employee)
     {
-        $this->entityManager->remove($employee);
-        $this->entityManager->flush();
+        $this->_em->remove($employee);
+        $this->_em->flush();
+    }
+
+    public function save(Employee $employee)
+    {
+        $this->_em->persist($employee);
+        $this->_em->flush();
     }
 
 }

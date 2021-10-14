@@ -7,7 +7,7 @@ use App\Entity\Employee;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Mail;
+use Knp\Component\Pager\PaginatorInterface;
 use App\Factory\MailFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,9 +24,28 @@ class MailController extends AbstractController
 {
     private $mailRepository;
 
+    const BASE_EMAIL = 'crm@mbryla89.webd.pro';
+
     public function __construct(MailRepository $mailRepository)
     {
         $this->mailRepository = $mailRepository;
+    }
+
+    /**
+     * 
+     * @Route("/mails", name="mails")
+     */
+    public function mails(Request $request, PaginatorInterface $paginator): Response
+    {  
+        $mails = $this->mailRepository->findAll();
+        $pagination = $paginator->paginate(
+            $mails,
+            $request->query->getInt('page', 1),
+            10
+        );
+        return $this->render('general_panel/mail.html.twig', [
+            'mails' =>  $pagination
+        ]);
     }
 
     /**
@@ -85,10 +104,10 @@ class MailController extends AbstractController
         }
 
         $email = (new Email())
-            ->from('crm@mbryla89.webd.pro')
-            ->to('brylaaaa@gmail.com')
-            ->subject('Test CRM')
-            ->text('This is test message');
+            ->from(self::BASE_EMAIL)
+            ->to($mail->getCustomer()->getEmail())
+            ->subject($mail->getSubject())
+            ->text($mail->getMessage());
 
         $mailer->send($email);
 
@@ -98,5 +117,46 @@ class MailController extends AbstractController
         return $this->redirectToRoute('mails_show', [
             'id' => $id
         ]);
+    }
+
+    /**
+     * @Route("/mail/{id}/edit", name="mails_edit")
+     */
+    public function edit($id, Request $request): Response
+    {
+        $mail = $this->mailRepository->find($id);
+
+        if ($mail === null) {
+            return new Response($this->renderView('exception/404.html.twig', [],  404));
+        }
+
+        $form = $this->createForm(MailType::class, $mail);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+           
+            $this->mailRepository->save($form->getData());
+            $this->addFlash('success', 'Mail updated');
+            return $this->redirect('/mail/'.$id);
+        }
+
+        return $this->render('mail/edit.html.twig',[
+            'form' => $form->createView()
+        ]);
+    }
+    /**
+     * @Route("/mail/{id}/delete", name="mails_delete")
+     */
+    public function delete($id): Response
+    {
+        $mail = $this->mailRepository->find($id);
+
+        if ($mail === null) {
+            
+            return new Response($this->renderView('exception/404.html.twig', [],  404));
+        }
+        $this->mailRepository->removeMail($mail);
+        $this->addFlash('success', 'Mail deleted!');
+
+        return $this->redirectToRoute('mails');
     }
 }

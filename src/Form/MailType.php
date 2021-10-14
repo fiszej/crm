@@ -56,7 +56,7 @@ class MailType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Mail::class,
+            'data_class' => Mail::class
         ]);
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Employee;
+use App\Form\EmployeeType;
+use App\Form\RegistrationFormType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,6 +22,16 @@ class EmployeeController extends AbstractController
     {
         $this->repository = $repository;
         $this->taskRepository = $taskRepository;
+    }
+
+    /**
+     * @Route("/employees", name="employee")
+     */
+    public function employee(): Response
+    {    
+        return $this->render('general_panel/employee.html.twig', [
+            'employees' => $this->repository->findAll()
+        ]);
     }
 
     /**
@@ -58,6 +70,34 @@ class EmployeeController extends AbstractController
 
         $this->repository->delete($employee);
         return $this->redirectToRoute('employee');
+    }
+
+     /**
+     * @IsGranted("ROLE_ADMIN")
+     * @Route("/employee/{id}/edit", name="employee_edit")
+     */
+    public function edit($id, Request $request): Response
+    {
+        $employee = $this->repository->find($id);
+
+        if ($employee === null) {
+            return new Response($this->renderView('exception/404.html.twig', [],  404));
+        }
+        
+        $form = $this->createForm(EmployeeType::class, $employee);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $employee = $form->getData();
+            $this->repository->save($employee);
+            $this->addFlash('success', 'Employee updated');
+
+            return $this->redirect('/employee/'.$id);
+        }
+
+        return $this->render('employee/edit.html.twig',[
+            'form' => $form->createView()
+        ]);
     }
 
 }

@@ -12,7 +12,7 @@
 				<div class="card h-100">
 					<div class="card-header pb-0 p-3">
 						<div class="row">
-													<small class="text-center"><strong class="text-dark">Created at:</strong> {{ mail.createdAt|date('H:i  jS F Y')}} </small>
+							<small class="text-center"><strong class="text-dark">Created at:</strong> {{ mail.createdAt|date('H:i  jS F Y')}} </small>
 													
 							<div class="col-md-8 d-flex align-items-center">
 								<h6 class="mb-0">Mail
@@ -22,12 +22,13 @@
 							{% if mail.status == 0 %}
 							
 							<div class="col-md-4 text-end">
-								<a href="/mail/{{ mail.id }}/edit">
+								<a href="{{ path('mails_edit' , {id: mail.id})}}">
 									<i class="fas fa-user-edit text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"></i>
 								</a>
 							
 							
-								<a href="/mail/{{ mail.id }}/delete">
+								<a href="{{ path('mails_delete' , {id: mail.id})}}">
+								
 									<i class="ni ni-fat-remove text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"></i>
 								</a>
 							</div>
@@ -78,7 +79,7 @@
 									<small class="text-center"><strong class="text-dark">Sent at:</strong> {{ mail.sentAt|date('H:i  jS F Y')}} </small>
 								{% else %}
 									Waiting to sent <br><br>
-								<a href="/mail/{{ mail.id }}/sent" class="btn btn-primary" >
+								<a href="{{ path('mails_sent', {id: mail.id})}}" class="btn btn-primary" >
 								Sent
 								</a>
 								{% endif %}

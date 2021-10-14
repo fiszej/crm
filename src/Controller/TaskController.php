@@ -26,7 +26,18 @@ class TaskController extends AbstractController
     {
         $this->repository = $repository;
     }
-   /**
+
+     /**
+     * @Route("/tasks", name="tasks")
+     */
+    public function index(): Response
+    {   
+        return $this->render('general_panel/task.html.twig', [
+            'tasks' => $this->repository->findAll()
+        ]);
+    }
+
+    /**
      * @Route("/tasks/create", name="task_create")
      */
     public function create(Request $request, EntityManagerInterface $entityManager, TaskFactory $factory): Response

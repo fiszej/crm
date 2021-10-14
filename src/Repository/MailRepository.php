@@ -46,4 +46,17 @@ class MailRepository extends ServiceEntityRepository
 
         return $result;
     }
+
+    public function removeMail(Mail $mail): void
+    {
+        $this->entityManager->remove($mail);
+        $this->entityManager->flush();
+    }
+
+    public function save(Mail $mail): void
+    {
+        $this->entityManager->persist($mail);
+        $this->entityManager->flush();
+    }
+
 }

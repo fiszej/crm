@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit employee{% endblock %}
+
+{% block content %}
+    <h1>Edit Employee</h1>
+<div class="col-xl-6 ">
+    {{ form_start(form) }}
+         {{ form_row(form.name) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.phone) }}
+        {{ form_row(form.roles) }}
+    {{ form_end(form) }}
+    </div>
+{% endblock %}
