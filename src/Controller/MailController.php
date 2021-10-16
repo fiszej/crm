@@ -24,7 +24,7 @@ class MailController extends AbstractController
 {
     private $mailRepository;
 
-    const BASE_EMAIL = 'crm@mbryla89.webd.pro';
+    const BASE_EMAIL = 'mail@example.com';
 
     public function __construct(MailRepository $mailRepository)
     {
