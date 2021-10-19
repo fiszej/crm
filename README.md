@@ -1,4 +1,4 @@
-# crm
+# CRM SYMFONY 5
 
 <p>Basic crm system written in symfony 5 as part of PHP learning. It has functions of adding clients, tasks, creating and sending e-mails to clients. A simple module for displaying general and today's statistics.
 Logging system with roles and adding new employees by the admin
